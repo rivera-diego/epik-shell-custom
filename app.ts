@@ -51,10 +51,10 @@ App.start({
       console.log("Resetting monitor interface...");
       cleanupAllWindows();
 
-      // Esperar más tiempo para que el sistema detecte el monitor
+      // Esperar a que el sistema detecte el monitor
       setTimeout(() => {
         createAllWindows();
-      }, 500);
+      }, 600);
     };
 
     // Inicializar

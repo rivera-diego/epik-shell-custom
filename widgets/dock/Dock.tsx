@@ -12,7 +12,7 @@ const { dock } = options;
 
 const updateVisibility = () => {
   const focusedWs = hyprland.get_focused_workspace();
-  if (!focusedWs) return true; // Show dock if no focused workspace (during transitions)
+  if (!focusedWs) return true;
 
   return (
     hyprland.get_workspace(focusedWs.id)?.get_clients()
@@ -20,10 +20,11 @@ const updateVisibility = () => {
   );
 };
 
-export const dockVisible = Variable(updateVisibility());
-
 // transparent window to detect hover
-function DockHover(_gdkmonitor: Gdk.Monitor) {
+function DockHover(
+  _gdkmonitor: Gdk.Monitor,
+  dockVisible: Variable<boolean>
+) {
   const anchor = dock.position.get() == "top" ? TOP : BOTTOM;
 
   return (
@@ -38,7 +39,6 @@ function DockHover(_gdkmonitor: Gdk.Monitor) {
           }
         });
       }}
-      onDestroy={() => dockVisible.drop()}
       layer={Astal.Layer.TOP}
       anchor={anchor}
       application={App}
@@ -51,9 +51,6 @@ function DockHover(_gdkmonitor: Gdk.Monitor) {
         widthRequest={widthVar()}
         heightRequest={heightVar()}
       >
-        {/* I dont know why window/box not visible when there's no child/background-color */}
-        {/* So I give this child and set it to transparent so I can detect hover */}
-        {/* might be gtk4-layer-shell bug, idk */}
         placeholder
       </box>
     </window>
@@ -62,9 +59,11 @@ function DockHover(_gdkmonitor: Gdk.Monitor) {
 
 type DockProps = WindowProps & {
   gdkmonitor: Gdk.Monitor;
+  dockVisible: Variable<boolean>;
   animation?: string;
 };
-function Dock({ gdkmonitor, ...props }: DockProps) {
+
+function Dock({ gdkmonitor, dockVisible, ...props }: DockProps) {
   const anchor = dock.position.get() == "top" ? TOP : BOTTOM;
 
   return (
@@ -74,7 +73,6 @@ function Dock({ gdkmonitor, ...props }: DockProps) {
       namespace={"dock"}
       layer={Astal.Layer.TOP}
       anchor={anchor}
-      onDestroy={() => dockVisible.drop()}
       setup={(self) => {
         hook(self, App, "window-toggled", (_, win) => {
           if (win.name == "dock-hover" && win.visible) {
@@ -133,7 +131,10 @@ function setHoverSize() {
 }
 
 export default function (gdkmonitor: Gdk.Monitor) {
-  <Dock gdkmonitor={gdkmonitor} animation={`slide ${dock.position.get()}`} />;
+  // Variable LOCAL - se recrea cada vez que se instancia el dock
+  const dockVisible = Variable(updateVisibility());
+
+  // Observar cambios de Hyprland y actualizar visibilidad
   dockVisible
     .observe(hyprland, "notify::clients", () => {
       return updateVisibility();
@@ -141,19 +142,36 @@ export default function (gdkmonitor: Gdk.Monitor) {
     .observe(hyprland, "notify::focused-workspace", () => {
       return updateVisibility();
     });
-  DockHover(gdkmonitor);
+
+  // Crear ventanas pasando la variable local
+  <Dock
+    gdkmonitor={gdkmonitor}
+    dockVisible={dockVisible}
+    animation={`slide ${dock.position.get()}`}
+  />;
+
+  DockHover(gdkmonitor, dockVisible);
   setHoverSize();
 
+  // Manejar cambios de posición del dock
   dock.position.subscribe(() => {
     dockVisible.drop();
     const dockW = App.get_window("dock")!;
     dockW.set_child(null);
     dockW.destroy();
-    <Dock gdkmonitor={gdkmonitor} animation={`slide ${dock.position.get()}`} />;
+
+    <Dock
+      gdkmonitor={gdkmonitor}
+      dockVisible={dockVisible}
+      animation={`slide ${dock.position.get()}`}
+    />;
+
     const dockHover = App.get_window("dock-hover")!;
     dockHover.set_child(null);
     dockHover.destroy();
+
     setHoverSize();
+
     dockVisible
       .observe(hyprland, "notify::clients", () => {
         return updateVisibility();
@@ -161,7 +179,8 @@ export default function (gdkmonitor: Gdk.Monitor) {
       .observe(hyprland, "notify::focused-workspace", () => {
         return updateVisibility();
       });
-    DockHover(gdkmonitor);
+
+    DockHover(gdkmonitor, dockVisible);
     windowAnimation();
   });
 }
