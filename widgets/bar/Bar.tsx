@@ -5,6 +5,7 @@ import WorkspacesPanelButton from "./WorkspacesPanelButton";
 import LauncherPanelButton from "./LauncherPanelButton";
 import NotifPanelButton from "./NotifPanelButton";
 import QSPanelButton from "./QSPanelButton";
+import KanbanPanelButton from "./KanbanPanelButton";
 import { separatorBetween } from "../../utils";
 import options from "../../options";
 import { idle } from "astal";
@@ -20,9 +21,9 @@ const panelButton = {
   workspace: () => <WorkspacesPanelButton />,
   time: () => <TimePanelButton />,
   notification: () => <NotifPanelButton />,
-
   quicksetting: () => <QSPanelButton />,
   tray: () => <TrayPanelButton />,
+  kanban: () => <KanbanPanelButton />,
 };
 
 function Start() {

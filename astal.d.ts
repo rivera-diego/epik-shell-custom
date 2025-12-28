@@ -31,6 +31,12 @@ declare module 'astal/gtk4' {
          * @returns Window instance or null
          */
         get_window(name: string): any | null;
+
+        /**
+         * Get all application windows
+         * @returns Array of windows
+         */
+        get_windows(): any[];
     }
 
     /**
@@ -90,8 +96,15 @@ declare module 'astal/gtk4' {
      */
     export namespace Gdk {
         export class Monitor {
+            display_name: string;
             // Add monitor properties as needed
         }
+
+        export class Display {
+            static get_default(): Display | null;
+            connect(signal: string, callback: (...args: any[]) => void): number;
+        }
+
         // Add other Gdk types as needed
     }
 }

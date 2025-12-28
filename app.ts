@@ -6,12 +6,59 @@ import initHyprland from "./utils/hyprland";
 
 initStyles();
 
+// Variable global para acceder a funciones desde request handler
+let resetMonitorInterface: () => void;
+
 App.start({
   requestHandler(req, res) {
-    request(req, res);
+    // Manejar comandos personalizados
+    if (req === "reset-monitors") {
+      console.log("Received reset-monitors request from script");
+      resetMonitorInterface();
+      res("OK");
+    } else {
+      request(req, res);
+    }
   },
   main() {
-    windows.map((win) => App.get_monitors().map(win));
     initHyprland();
+
+    const cleanupAllWindows = () => {
+      const allWindows = App.get_windows();
+      console.log(`Destroying ${allWindows.length} windows...`);
+
+      allWindows.forEach(win => {
+        try {
+          console.log(`Destroying: ${win.name}`);
+          win.destroy();
+        } catch (e) {
+          console.error(`Error destroying ${win.name}:`, e);
+        }
+      });
+    };
+
+    const createAllWindows = () => {
+      const monitors = App.get_monitors();
+      console.log(`Creating windows for ${monitors.length} monitors`);
+
+      monitors.forEach(monitor => {
+        console.log(`Creating windows for monitor: ${monitor.display_name}`);
+        windows.forEach(win => win(monitor));
+      });
+    };
+
+    resetMonitorInterface = () => {
+      console.log("Resetting monitor interface...");
+      cleanupAllWindows();
+
+      // Esperar más tiempo para que el sistema detecte el monitor
+      setTimeout(() => {
+        createAllWindows();
+      }, 500);
+    };
+
+    // Inicializar
+    createAllWindows();
+    console.log("AGS ready. Use 'astal -i epik-shell reset-monitors' to reset interface");
   },
 });

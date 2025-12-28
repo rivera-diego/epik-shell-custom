@@ -1,0 +1,46 @@
+{
+  "columns": {
+    "todo": {
+      "id": "todo",
+      "title": "To Do",
+      "tasks": [
+        {
+          "id": "task-1766888389960-pkbdg2yri",
+          "content": "quitar segundos del tiempo",
+          "createdAt": "2025-12-28T02:19:49.961Z"
+        },
+        {
+          "id": "task-1766888419033-kvhkfs0e9",
+          "content": "CUalquier texto ingresado que tenga formato oracion",
+          "createdAt": "2025-12-28T02:20:19.033Z"
+        },
+        {
+          "id": "task-1766888433666-rzkdk234o",
+          "content": "Dormir temprano",
+          "createdAt": "2025-12-28T02:20:33.666Z"
+        }
+      ]
+    },
+    "in-progress": {
+      "id": "in-progress",
+      "title": "In Progress",
+      "tasks": [
+        {
+          "id": "task-1766888089286-epg039exm",
+          "content": "Jugar dota",
+          "createdAt": "2025-12-28T02:14:49.286Z"
+        },
+        {
+          "id": "task-1766888349911-jz9y2zi2g",
+          "content": "Investigar mejora en el manejo de hyperland tiling",
+          "createdAt": "2025-12-28T02:19:09.911Z"
+        }
+      ]
+    },
+    "done": {
+      "id": "done",
+      "title": "Done",
+      "tasks": []
+    }
+  }
+}

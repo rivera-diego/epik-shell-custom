@@ -17,7 +17,8 @@ function WorkspaceButton({ ws, ...props }: WsButtonProps) {
     (fws, _) => {
       const classes = ["workspace-button"];
 
-      const active = fws.id == ws.id;
+      // Handle null focused workspace during monitor transitions
+      const active = fws?.id == ws.id;
       active && classes.push("active");
 
       const occupied = hyprland.get_workspace(ws.id)?.get_clients().length > 0;
@@ -32,7 +33,13 @@ function WorkspaceButton({ ws, ...props }: WsButtonProps) {
       onDestroy={() => classNames.drop()}
       valign={Gtk.Align.CENTER}
       halign={Gtk.Align.CENTER}
-      onClicked={() => ws.focus()}
+      onClicked={() => {
+        // Solo cambiar si no estamos ya en ese workspace
+        const currentWs = hyprland.get_focused_workspace();
+        if (currentWs && currentWs.id !== ws.id) {
+          hyprland.dispatch("workspace", String(ws.id));
+        }
+      }}
       {...props}
     >
       <label label={symbols[ws.id - 1]} cssClasses={["workspacei-icon"]} />

@@ -8,6 +8,7 @@ import NotificationWindow from "./widgets/notification/NotificationWindow.jsx";
 import PowerMenu from "./widgets/powermenu/PowerMenu.jsx";
 import VerificationWindow from "./widgets/powermenu/VerificationWindow.jsx";
 import QSWindow from "./widgets/quicksettings/QSWindow.jsx";
+import KanbanWindow from "./widgets/kanban/KanbanWindow.jsx";
 
 
 export default [
@@ -19,6 +20,7 @@ export default [
   NotificationPopup,
   NotificationWindow,
   QSWindow,
+  KanbanWindow,
   PowerMenu,
   VerificationWindow,
 ];

@@ -11,8 +11,11 @@ const { TOP, BOTTOM } = Astal.WindowAnchor;
 const { dock } = options;
 
 const updateVisibility = () => {
+  const focusedWs = hyprland.get_focused_workspace();
+  if (!focusedWs) return true; // Show dock if no focused workspace (during transitions)
+
   return (
-    hyprland.get_workspace(hyprland.get_focused_workspace().id)?.get_clients()
+    hyprland.get_workspace(focusedWs.id)?.get_clients()
       .length <= 0
   );
 };

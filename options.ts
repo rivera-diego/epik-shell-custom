@@ -16,14 +16,14 @@ const options = mkOptions(
     },
     dock: {
       position: opt("bottom"),
-      pinned: opt(["firefox", "Alacritty", "org.gnome.Nautilus", "localsend"]),
+      pinned: opt(["org.gnome.Nautilus", "zen", "com.mitchellh.ghostty"]),
     },
     bar: {
       position: opt("top"),
       separator: opt(true),
       start: opt(["launcher", "workspace"]),
       center: opt(["time"]),
-      end: opt(["tray", "quicksetting", "notification"]),
+      end: opt(["tray", "kanban", "quicksetting", "notification"]),
     },
     desktop_clock: {
       position: opt<
