@@ -31,28 +31,8 @@ This fork includes the following customizations:
 
 ## Screenshots
 
-<!-- Add your screenshots or demo video here -->
-
-### Option 1: Screenshots
-Upload screenshots to GitHub and use:
-```markdown
-![Screenshot 1](https://github.com/YOUR-USERNAME/REPO-NAME/assets/...)
-![Screenshot 2](https://github.com/YOUR-USERNAME/REPO-NAME/assets/...)
-```
-
-### Option 2: Video Demo
-Upload a video (MP4/WebM) to GitHub and use:
-```markdown
-https://github.com/YOUR-USERNAME/REPO-NAME/assets/.../your-video.mp4
-```
-
-Or use a GIF:
-```markdown
-![Demo](https://github.com/YOUR-USERNAME/REPO-NAME/assets/.../demo.gif)
-```
-
----
-
+https://github.com/user-attachments/assets/adc20cd0-59fa-43a8-bd67-8530d01670fd
+*Custom Epik Shell with enhanced widgets and themes*
 ## Original Credits
 
 - **Original Epik Shell**: [ezerinz/epik-shell](https://github.com/ezerinz/epik-shell)
