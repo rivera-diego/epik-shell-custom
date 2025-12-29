@@ -5,27 +5,23 @@
     background-color: color.adjust($bg, $alpha: -0.1);
     border: 2px solid $fg;
     border-radius: $window-border-radius;
-    padding: 20px;
+    padding: 10px;
     box-shadow: $window-shadow-offset $window-shadow-blur $window-shadow-spread color.adjust($window-shadow-color, $alpha: -0.2);
 
-    .osd-content {
-        margin-bottom: 10px;
+    .osd-icon {
+        font-size: 1.25rem;
+        color: $accent;
+    }
 
-        .osd-icon {
-            font-size: 3rem;
-            color: $accent;
-        }
-
-        .osd-label {
-            font-size: 1.5rem;
-            color: $fg;
-            font-weight: bold;
-        }
+    .osd-label {
+        font-size: 0.6em;
+        color: $fg;
+        font-weight: bold;
     }
 
     .osd-bar {
-        min-width: 200px;
-        min-height: 10px;
+        min-width: 5px;
+        min-height: 120px;
 
         trough {
             background-color: color.adjust($fg, $alpha: -0.8);
