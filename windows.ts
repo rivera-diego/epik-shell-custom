@@ -11,7 +11,9 @@ import QSWindow from "./widgets/quicksettings/QSWindow.jsx";
 import KanbanWindow from "./widgets/kanban/KanbanWindow.jsx";
 
 
+
 import SysInfoPopup from "./widgets/sysinfo/SysInfoPopup";
+import OSD from "./widgets/osd/OSD";
 
 export default [
   Dock,
@@ -25,5 +27,6 @@ export default [
   KanbanWindow,
   PowerMenu,
   VerificationWindow,
-  SysInfoPopup, // New System Monitor Popup
+  SysInfoPopup,
+  OSD,
 ];

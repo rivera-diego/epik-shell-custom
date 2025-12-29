@@ -132,9 +132,14 @@ $shadow-v: nth($bar-button-shadow-offset, 2);
   }
 
   &.active {
+
     background-color: $accent;
     font-weight: bold;
     color: $bg;
+  }
+// SOMBRA DELICADA Y SUAVE QUE PERSISTE EN EL BOTON DESPUES DE PRESIONARLO
+  &:focus {
+    outline: none;
   }
 }
 

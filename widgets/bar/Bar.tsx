@@ -19,6 +19,7 @@ const { start, center, end } = bar;
 import DockTrigger from "../dock/DockTrigger";
 import MediaPanelButton from "./MediaPanelButton";
 import SysInfoPanelButton from "./SysInfoPanelButton";
+import KeyboardPanelButton from "./KeyboardPanelButton";
 
 const panelButton = {
   launcher: (m: Gdk.Monitor) => <LauncherPanelButton />,
@@ -29,8 +30,9 @@ const panelButton = {
   tray: (m: Gdk.Monitor) => <TrayPanelButton />,
   kanban: (m: Gdk.Monitor) => <KanbanPanelButton />,
   docktrigger: (m: Gdk.Monitor) => <DockTrigger monitor={m} />,
-  media: (m: Gdk.Monitor) => <MediaPanelButton />, // Nuevo widget media
-  sysinfo: (m: Gdk.Monitor) => <SysInfoPanelButton />, // Nuevo widget RAM
+  media: (m: Gdk.Monitor) => <MediaPanelButton />,
+  sysinfo: (m: Gdk.Monitor) => <SysInfoPanelButton />,
+  keyboard: (m: Gdk.Monitor) => <KeyboardPanelButton />,
 };
 
 function Start({ monitor }: { monitor: Gdk.Monitor }) {

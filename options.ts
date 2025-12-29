@@ -21,9 +21,9 @@ const options = mkOptions(
     bar: {
       position: opt("top"),
       separator: opt(true),
-      start: opt(["launcher", "workspace"]),
+      start: opt(["launcher", "workspace", "keyboard"]),
       center: opt(["docktrigger"]),
-      end: opt(["media", "sysinfo", "time", "tray", "kanban", "quicksetting", "notification"]),
+      end: opt(["media", "sysinfo", "kanban", "time", "tray", "quicksetting", "notification"]),
     },
     desktop_clock: {
       position: opt<
@@ -195,6 +195,7 @@ export const widgets = {
     "VerificationWindow",
     "DesktopClock",
     "SysInfoPopup",
+    "OSD",
   ],
 
   /**

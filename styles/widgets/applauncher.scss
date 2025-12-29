@@ -11,9 +11,10 @@
     box-shadow: 0 0 0 $window-border-width $window-border-color;
   }
 
-  > overlay {
+  >overlay {
     margin: $window-padding;
     margin-bottom: 6px;
+
     entry {
       outline: none;
       padding: $window-padding;
@@ -24,6 +25,7 @@
 
       text {
         font-size: 1.2rem;
+
         placeholder {
           font-size: 1.2rem;
         }
@@ -34,14 +36,16 @@
   .entry-overlay {
     box-shadow: 0 0 0 $window-border-width $fg;
     border-radius: $window-border-radius;
+
     scrolledwindow viewport picture {
       border-radius: $window-border-radius;
     }
   }
 
-  > scrolledwindow viewport {
+  >scrolledwindow viewport {
     padding: $window-padding;
     padding-top: $window-border-width;
+
     box {
       outline-width: $window-border-width;
 
@@ -55,14 +59,13 @@
     -gtk-icon-size: 2rem;
     padding: 0.4rem 0.8rem;
     background-color: color.adjust($fg, $alpha: -0.9);
+
     image {
       margin-right: 6px;
     }
 
     &:active {
-      > * {
-        transform: none;
-      }
+
 
       image {
         transform: scale(0.85);
@@ -72,9 +75,11 @@
     &:focus {
       outline-color: $accent;
     }
+
     &:hover {
       background-color: color.adjust($fg, $alpha: -0.75);
     }
+
     .description {
       font-size: 0.85rem;
       font-weight: 400;
