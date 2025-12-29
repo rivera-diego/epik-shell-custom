@@ -22,8 +22,8 @@ const options = mkOptions(
       position: opt("top"),
       separator: opt(true),
       start: opt(["launcher", "workspace"]),
-      center: opt(["time"]),
-      end: opt(["tray", "kanban", "quicksetting", "notification"]),
+      center: opt(["docktrigger"]),
+      end: opt(["media", "sysinfo", "time", "tray", "kanban", "quicksetting", "notification"]),
     },
     desktop_clock: {
       position: opt<
@@ -50,11 +50,11 @@ const options = mkOptions(
         opacity: opt(1),
         border_radius: opt(6),
         margin: opt(10),
-        padding: opt(3),
-        border_width: opt(2),
+        padding: opt(0),
+        border_width: opt(1),
         border_color: opt("$fg"),
         shadow: {
-          offset: opt([6, 6]),
+          offset: opt([0]),
           blur: opt(10),
           spread: opt(0),
           color: opt("$fg"),
@@ -99,15 +99,113 @@ const options = mkOptions(
         fg: opt("#00ff9f"),
         accent: opt("#ff00ff"),
         red: opt("#ff0055"),
+        // Paleta Semantica Extendida
+        primary: opt("#ff00ff"), // Accent
+        secondary: opt("#00ff9f"), // FG
+        tertiary: opt("#0055ff"), // Extra
+        error: opt("#ff0055"),
+        utility: opt("#00ffff"),
       },
       dark: {
         bg: opt("#1a1b26"),
         fg: opt("#c0caf5"),
         accent: opt("#7aa2f7"),
         red: opt("#f7768e"),
+        // Paleta Semantica Extendida (Base Tokyo Night)
+        primary: opt("#7aa2f7"),    // Blue (Action)
+        secondary: opt("#9ece6a"),  // Green (Success/Info)
+        tertiary: opt("#bb9af7"),   // Magenta (Aux)
+        error: opt("#f7768e"),      // Red (Alert)
+        utility: opt("#73daca"),    // Teal (Utility)
+      },
+      // NUEVOS TEMAS
+      cyberpunk: {
+        bg: opt("#000b1e"),
+        fg: opt("#00ff9f"),
+        accent: opt("#ff003c"), // Cyber Red
+        red: opt("#ff003c"),
+        primary: opt("#fcee0a"),    // Yellow Neon
+        secondary: opt("#00ff9f"),  // Green Neon
+        tertiary: opt("#05d9e8"),   // Blue Neon
+        error: opt("#ff2a6d"),      // Pink Neon
+        utility: opt("#d1f7ff"),    // White neon
+      },
+      nord: {
+        bg: opt("#2e3440"),
+        fg: opt("#d8dee9"),
+        accent: opt("#88c0d0"), // Frost Blue
+        red: opt("#bf616a"),
+        primary: opt("#81a1c1"),    // Blue
+        secondary: opt("#a3be8c"),  // Green
+        tertiary: opt("#b48ead"),   // Purple
+        error: opt("#bf616a"),      // Red
+        utility: opt("#ebcb8b"),    // Yellow
+      },
+      catppuccin: {
+        bg: opt("#1e1e2e"),
+        fg: opt("#cdd6f4"),
+        accent: opt("#cba6f7"), // Mauve
+        red: opt("#f38ba8"),
+        primary: opt("#89b4fa"),    // Blue
+        secondary: opt("#a6e3a1"),  // Green
+        tertiary: opt("#f5c2e7"),   // Pink
+        error: opt("#f38ba8"),      // Red
+        utility: opt("#94e2d5"),    // Teal
+      },
+      gruvbox: {
+        bg: opt("#282828"),
+        fg: opt("#ebdbb2"),
+        accent: opt("#d79921"), // Yellow
+        red: opt("#cc241d"),
+        primary: opt("#d65d0e"),    // Orange
+        secondary: opt("#98971a"),  // Green
+        tertiary: opt("#b16286"),   // Purple
+        error: opt("#fb4934"),      // Red
+        utility: opt("#458588"),    // Blue
       },
     },
   },
 );
+
+/**
+ * Widget Monitor Configuration
+ * Control which widgets appear on which monitors
+ */
+export const widgets = {
+  /**
+   * Widgets that appear on ALL monitors
+   * Example: Bar (you want it on every screen)
+   */
+  allMonitors: [
+    "Bar_default",
+    "Dock_default",
+  ],
+
+  /**
+   * Widgets that ONLY appear on the PRIMARY monitor
+   * Example: Dock, popups, notifications (avoid duplicates)
+   */
+  primaryOnly: [
+    "DateMenu_default",
+    "Applauncher",
+    "NotificationPopup",
+    "NotificationWindow_default",
+    "QSWindow_default",
+    "KanbanWindow_default",
+    "VerificationWindow",
+    "DesktopClock",
+    "SysInfoPopup",
+  ],
+
+  /**
+   * Widgets that ONLY appear on SECONDARY monitors
+   * Example: Secondary clock, weather widget
+   * (Currently empty - add widgets here if you want them only on secondary screens)
+   */
+  secondaryOnly: [
+
+    // Vacío - Agregar widgets que SOLO quieras en monitor secundario
+  ],
+};
 
 export default options;

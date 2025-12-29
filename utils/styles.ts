@@ -8,7 +8,7 @@ import { Opt } from "./option";
 const { theme } = options;
 const { window, bar } = theme;
 
-type ThemeMode = "dark" | "light";
+type ThemeMode = string; // Permitir cualquier nombre de tema
 type ShorthandProperty = {
   top: number;
   right: number;
@@ -18,7 +18,13 @@ type ShorthandProperty = {
 
 async function initGtk(mode: ThemeMode, reset = false) {
   const targetDir = `${GLib.get_home_dir()}/.themes/colors.css`;
-  const colors = theme[mode];
+  const colors = theme[mode] || theme.dark; // Fallback a dark si no existe
+
+  if (!colors) {
+    console.error(`Theme ${mode} not found in options!`);
+    return;
+  }
+
   const defineColor = (key: string, value: string, alpha = 1.0) =>
     `@define-color ${key} alpha(${value}, ${alpha});`;
 
@@ -34,7 +40,9 @@ async function initGtk(mode: ThemeMode, reset = false) {
   // generate colors.css in $HOME/.themes/
   await writeFileAsync(targetDir, gtkVar.join("\n"))
     .then(() => {
-      gsettings.set_string("color-scheme", `prefer-${mode}`);
+      // Asumir dark para cualquier tema custom que no sea light explícitamente
+      const scheme = mode === "light" ? "prefer-light" : "prefer-dark";
+      gsettings.set_string("color-scheme", scheme);
       if (reset) {
         gsettings.reset("gtk-theme");
       }
@@ -135,6 +143,11 @@ async function initScss(mode: ThemeMode) {
     defineVar(colors.fg, "string", 1),
     defineVar(colors.accent, "string", 1),
     defineVar(colors.red, "string", 1),
+    defineVar(colors.primary, "string", 1),
+    defineVar(colors.secondary, "string", 1),
+    defineVar(colors.tertiary, "string", 1),
+    defineVar(colors.error, "string", 1),
+    defineVar(colors.utility, "string", 1),
     defineVar(window.opacity, "number_only"),
     defineVar(window.border_radius, "number_or_array"),
     defineVar(window.margin, "number_or_array"),

@@ -1,8 +1,57 @@
+# Build outputs
+build/
+dist/
+*.js.map
+
+# Generated SCSS variables (dynamically created by utils/styles.ts)
+styles/variables.scss
+
+# User-specific configuration files
+config.json
+kanban-data.json
+
+# Cache directories
+.cache/
+cache/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.pid
+
+# Node modules (if using npm/yarn for dependencies)
 node_modules/
-@girs/
-style.css
-*.css.map
-app.js.map
-traceify/
-/epikshell.js
-/styles/variables.scss
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS-specific files
+Thumbs.db
+desktop.ini
+
+# GTK/Wayland runtime
+.gjs/
+
+# User wallpapers (optional - remove this line if you want to share wallpapers)
+wallpapers/
+*.jpg
+*.png
+*.webp
+
+# Screenshot and recordings
+screenshots/
+recordings/
+
+# Personal scripts or experimental files
+scratch/
+test/
+experiments/

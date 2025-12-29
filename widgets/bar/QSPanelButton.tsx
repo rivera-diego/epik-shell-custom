@@ -29,6 +29,7 @@ function VolumeIcon() {
 
 export default function QSPanelButton() {
   const wp = AstalWp.get_default();
+  const speaker = wp?.audio.defaultSpeaker;
 
   return (
     <PanelButton
@@ -36,9 +37,18 @@ export default function QSPanelButton() {
       onClicked={() => {
         App.toggle_window(WINDOW_NAME);
       }}
+      onScroll={(_, dx, dy) => {
+        if (!speaker) return;
+        // dy < 0 es scroll UP (subir volumen en mayoría de mouse)
+        // dy > 0 es scroll DOWN (bajar volumen)
+        if (dy < 0) speaker.volume = Math.min(1.5, speaker.volume + 0.05);
+        else if (dy > 0) speaker.volume = Math.max(0, speaker.volume - 0.05);
+      }}
     >
       <box spacing={6}>
         <VolumeIcon />
+        {speaker && <label label={bind(speaker, "volume").as(v => `${Math.round(v * 100)}%`)} />}
+
         <image
           visible={wp?.defaultMicrophone && bind(wp.default_microphone, "mute")}
           iconName="microphone-disabled-symbolic"

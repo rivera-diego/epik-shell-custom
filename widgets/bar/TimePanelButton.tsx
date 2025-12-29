@@ -9,7 +9,10 @@ export default function TimePanelButton({ format = "%H:%M" }) {
       window={WINDOW_NAME}
       onClicked={() => App.toggle_window(WINDOW_NAME)}
     >
-      <label label={time((t) => t.format(format)!)} />
+      <box spacing={8}>
+        <label label="" cssClasses={["time-icon"]} />
+        <label label={time((t) => t.format(format)!)} />
+      </box>
     </PanelButton>
   );
 }

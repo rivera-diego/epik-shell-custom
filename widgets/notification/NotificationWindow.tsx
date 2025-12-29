@@ -155,8 +155,17 @@ function NotificationWindow(_gdkmonitor: Gdk.Monitor) {
 export default function (_gdkmonitor: Gdk.Monitor) {
   NotificationWindow(_gdkmonitor);
 
-  layout.subscribe(() => {
+  // Store subscription reference for cleanup
+  const layoutSub = layout.subscribe(() => {
     App.remove_window(App.get_window(WINDOW_NAME)!);
     NotificationWindow(_gdkmonitor);
   });
+
+  // Cleanup on window destroy
+  const window = App.get_window(WINDOW_NAME);
+  if (window) {
+    window.connect("destroy", () => {
+      layoutSub();
+    });
+  }
 }

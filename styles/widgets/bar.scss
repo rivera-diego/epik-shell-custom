@@ -1,84 +1,240 @@
 @use "sass:color";
-@use "sass:math";
-@use "../variables.scss" as *;
-
-$shadow-h: nth($bar-button-shadow-offset, 1);
-$shadow-v: nth($bar-button-shadow-offset, 2);
+@use "../variables" as *;
 
 .bar-container {
-  background-color: color.adjust($bar-bg-color, $alpha: calc($bar-opacity - 1));
-  margin: $bar-margin;
-  border-radius: $bar-border-radius;
-  padding: $bar-padding;
-  box-shadow:
-    0 0 0 $bar-border-width $bar-border-color,
-    $bar-shadow-offset $bar-shadow-blur $bar-shadow-spread color.adjust($bar-shadow-color, $alpha: calc($bar-shadow-opacity - 1));
+  // background-color: color.adjust($bar-bg-color, $alpha: calc($bar-opacity - 1));
 
-  separator {
-    min-width: if($bar-separator, 2px, 0);
+  // Usamos multiples fondos para simular bordes que tamien se desvanecen
+  background-image:
+    // 1. Borde Superior (Fade)
+    linear-gradient(to right, transparent, $bar-border-color 25%, $bar-border-color 75%, transparent),
+    // 2. Borde Inferior (Fade)
+    linear-gradient(to right, transparent, $bar-border-color 25%, $bar-border-color 75%, transparent),
+    // 3. Fondo Principal (Fade)
+    linear-gradient(to right,
+      transparent,
+      color.adjust($bar-bg-color, $alpha: calc($bar-opacity - 1)) 15%,
+      color.adjust($bar-bg-color, $alpha: calc($bar-opacity - 1)) 85%,
+      transparent);
+
+  background-size:
+    100% $bar-border-width, // Top Border Size
+    100% $bar-border-width, // Bottom Border Size
+    100% 100%; // Main Fill Size
+
+  background-position:
+    top left, // Top Border Pos
+    bottom left, // Bottom Border Pos
+    center; // Main Fill Pos
+
+  background-repeat: no-repeat;
+
+  margin: $bar-margin;
+  padding: $bar-padding;
+
+  // box-shadow eliminado para evitar bordes solidos en los extremos transparentes
+  box-shadow: none;
+  // box-shadow original reference:
+  //   0 (-$bar-border-width) 0 0 $bar-border-color, // Arriba
+  //   0 $bar-border-width 0 0 $bar-border-color, // Abajo
+  //   $bar-shadow-offset $bar-shadow-blur $bar-shadow-spread color.adjust($bar-shadow-color, $alpha: calc($bar-shadow-opacity - 1));
+
+  // Quitamos bordes laterales para el efecto fade
+  border-left: none;
+  border-right: none;
+
+  &.split {
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+
+    >.bar-start {
+      // Fade hacia la derecha (hacia el centro vacío)
+      background-image: linear-gradient(to right, $bar-bg-color 60%, transparent);
+      padding: $bar-padding;
+      margin: 0;
+      border-radius: $bar-border-radius;
+      border-left: $bar-border-width solid $bar-border-color;
+      border-top: $bar-border-width solid $bar-border-color;
+      border-bottom: $bar-border-width solid $bar-border-color;
+      border-right: none; // Sin borde derecho para el fade
+      box-shadow: none;
+    }
+
+    >.bar-end {
+      // Fade hacia la izquierda (hacia el centro vacío)
+      background-image: linear-gradient(to left, $bar-bg-color 60%, transparent);
+      padding: $bar-padding;
+      margin: 0;
+      border-radius: $bar-border-radius;
+      border-right: $bar-border-width solid $bar-border-color;
+      border-top: $bar-border-width solid $bar-border-color;
+      border-bottom: $bar-border-width solid $bar-border-color;
+      border-left: none; // Sin borde izquierdo para el fade
+      box-shadow: none;
+    }
   }
 
-  .workspace-container {
-    background-color: color.adjust($bar-button-bg-color,
-        $alpha: calc($bar-button-opacity - 1));
-    box-shadow:
-      0 0 0 $bar-button-border-width $bar-button-border-color,
-      $bar-button-shadow-offset $bar-button-shadow-blur $bar-button-shadow-spread color.adjust($bar-button-shadow-color,
-        $alpha: calc($bar-button-shadow-opacity - 1));
+  &.vertical {
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0;
+  }
 
-    color: $bar-button-fg-color;
-    border-radius: calc(nth($bar-button-border-radius, 1) / 2);
-    padding: $bar-button-padding;
-    margin-right: if($shadow-h > 0, $shadow-h, 0);
-    margin-left: if($shadow-h <=0, $shadow-h, 0);
-    margin-bottom: if($shadow-v > 0, $shadow-v, 0);
-    margin-top: if($shadow-v <=0, $shadow-v, 0);
+  // Eliminar espacios de separadores
+  separator {
+    min-width: 0;
+    opacity: 0;
+    margin: 0;
+  }
+
+  // Estilo Workspaces
+  .workspace-container {
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
 
     .workspace-button {
-      background-color: color.adjust($bar-button-fg-color, $alpha: -0.55);
+      background-color: color.adjust($bar-button-fg-color, $alpha: -0.8);
       min-height: 0.65em;
       min-width: 1.5rem;
-      border-radius: calc(nth($bar-button-border-radius, 1) * 1.5);
-
-      transition: min-width 0.25s ease-out;
+      border-radius: 0; // SIN REDONDEO
+      transform: skewX(-20deg); // DIAGONAL
+      margin: 0 0px;
+      transition: all 0.25s ease-out;
 
       &:hover {
-        background-color: $bar-button-fg-color;
-
-        &.occupied {
-          background-color: $bar-button-fg-color;
-        }
+        background-color: $accent;
       }
 
       &.active {
-        min-width: 2.5rem;
+        min-width: 3rem;
         min-height: 0.95rem;
         background-color: $accent;
-
-        .workspacei-icon {
-          color: $bg;
-          font-weight: 900;
-        }
       }
+
+      .workspacei-icon {
+        transform: skewX(20deg);
+        font-weight: 900;
+        color: $fg;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+      }
+
+      &.active .workspacei-icon {
+        color: #1a1a1a;
+        text-shadow: none;
+      }
+
+      // Enderezar icono
 
       &.occupied {
         box-shadow: unset;
-        background-color: $bar-button-fg-color;
+        background-color: color.adjust($accent, $alpha: -0.5);
 
         &.active {
           background-color: $accent;
-
-          .workspacei-icon {
-            color: $bg;
-            font-weight: 900;
-          }
         }
       }
     }
+  }
+}
 
-    .workspacei-icon {
-      font-size: 1rem;
-      color: inherit;
+// VARIABLES SEMANTICAS (Fallback + Default)
+$fallback-primary: #7aa2f7;
+$fallback-secondary: #9ece6a;
+$fallback-tertiary: #bb9af7;
+$fallback-utility: #73daca;
+$fallback-error: #f7768e;
+
+$primary: $fallback-primary !default;
+$secondary: $fallback-secondary !default;
+$tertiary: $fallback-tertiary !default;
+$utility: $fallback-utility !default;
+$error: $fallback-error !default;
+
+// ESTILO POWERLINE / DIAGONAL GLOBAL
+.panel-button {
+  border-radius: $bar-button-border-radius; // Usar variable dinámica
+  transform: skewX(-20deg);
+  margin: 0 2px;
+  padding-left: 15px;
+  padding-right: 15px;
+
+  // Bordes y Sombra Dinámicos (para modo flotante)
+  border: $bar-button-border-width solid $bar-button-border-color;
+  box-shadow: $bar-button-shadow-offset $bar-button-shadow-blur $bar-button-shadow-spread $bar-button-shadow-color;
+
+  >* {
+    transform: skewX(20deg);
+  }
+
+  // Enderezar contenido
+
+  // ESTILOS ESPECIFICOS (GRADIENTES FADE)
+  // El usuario quiere "desvanecimiento". Hacemos fade de Solido a casi transparente/bg.
+
+  &.applauncher {
+    // Izquierda -> Desvanece hacia la derecha
+    background: linear-gradient(to left, $error 30%, color.adjust($error, $alpha: -0.8) 100%);
+
+    color: #1a1a1a;
+
+    // Desactivar efecto de escala global solo para este boton
+    &:active {
+      >* {
+        transform: none;
+      }
     }
   }
+
+  &.notifications {
+    background: linear-gradient(to right, $error 30%, color.adjust($error, $alpha: -0.8) 100%);
+    color: #1a1a1a;
+  }
+
+  &.quicksettings {
+    // Derecha -> Desvanece hacia la izquierda
+    background: linear-gradient(to left, $primary 30%, color.adjust($primary, $alpha: -0.8) 100%);
+    color: #1a1a1a;
+  }
+
+  &.sysinfo,
+  &.sysinfo-popup {
+    background: linear-gradient(to left, $secondary 30%, color.adjust($secondary, $alpha: -0.8) 100%);
+    color: #1a1a1a;
+
+    .sysinfo-label {
+      color: #1a1a1a;
+    }
+  }
+
+  &.datemenu-window,
+  &.kanban-window {
+    background: linear-gradient(to left, $tertiary 30%, color.adjust($tertiary, $alpha: -0.8) 100%);
+    color: #1a1a1a;
+
+    .time-icon {
+      color: #1a1a1a;
+    }
+  }
+
+  &.tray {
+    background: linear-gradient(to left, $utility 30%, color.adjust($utility, $alpha: -0.8) 100%);
+    color: #1a1a1a;
+  }
+
+
+}
+
+// FIX BORDES LATERALES
+// Extender los widgets extremos para cubrir huecos diagonales
+.bar-start>.panel-button:first-child {
+  margin-left: -5px;
+  padding-left: 20px;
+}
+
+.bar-end>.panel-button:last-child {
+  margin-right: -8px;
+  padding-right: 20px;
 }

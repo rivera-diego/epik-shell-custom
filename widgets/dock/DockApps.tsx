@@ -65,6 +65,7 @@ function AppButton({
           halign={Gtk.Align.CENTER}
           visible={bind(hyprland, "clients").as((clients) => {
             return clients
+              .filter((e) => e.class)
               .map((e) => e.class.toLowerCase())
               .includes(term.toLowerCase());
           })}
@@ -94,10 +95,7 @@ function AppsList() {
             pinned={true}
             onClicked={() => {
               for (const client of hyprland.get_clients()) {
-                if (client.class.toLowerCase().includes(term.toLowerCase())) {
-                  timeout(1, () => {
-                    App.get_window("dock-hover")!.set_visible(true);
-                  });
+                if (client.class && client.class.toLowerCase().includes(term.toLowerCase())) {
                   return client.focus();
                 }
               }
@@ -112,7 +110,7 @@ function AppsList() {
           .reverse()
           .map((client) => {
             for (const appClass of options.dock.pinned.get()) {
-              if (client.class.toLowerCase().includes(appClass.toLowerCase())) {
+              if (client.class && client.class.toLowerCase().includes(appClass.toLowerCase())) {
                 return;
               }
             }
@@ -129,9 +127,6 @@ function AppsList() {
                   <AppButton
                     app={app}
                     onClicked={() => {
-                      timeout(1, () => {
-                        App.get_window("dock-hover")!.set_visible(true);
-                      });
                       client.focus();
                     }}
                     term={client.class}
@@ -147,65 +142,14 @@ function AppsList() {
   );
 }
 
-function MediaPlayer({ player }) {
-  if (!player) {
-    return <box />;
-  }
-  const title = bind(player, "title").as((t) => t || "Unknown Track");
-  const artist = bind(player, "artist").as((a) => a || "Unknown Artist");
-  const coverArt = bind(player, "coverArt");
+// MediaPlayer removed - moved to Bar
 
-  const playIcon = bind(player, "playbackStatus").as((s) =>
-    s === AstalMpris.PlaybackStatus.PLAYING
-      ? "media-playback-pause-symbolic"
-      : "media-playback-start-symbolic",
-  );
-
-  return (
-    <box cssClasses={["media-player"]} hexpand>
-      <image
-        overflow={Gtk.Overflow.HIDDEN}
-        pixelSize={35}
-        cssClasses={["cover"]}
-        file={coverArt}
-      />
-      <box vertical hexpand>
-        <label
-          ellipsize={Pango.EllipsizeMode.END}
-          halign={Gtk.Align.START}
-          label={title}
-          maxWidthChars={15}
-        />
-        <label halign={Gtk.Align.START} label={artist} />
-      </box>
-      <button
-        halign={Gtk.Align.END}
-        valign={Gtk.Align.CENTER}
-        onClicked={() => player.play_pause()}
-        visible={bind(player, "canControl")}
-      >
-        <image iconName={playIcon} pixelSize={18} />
-      </button>
-      <button
-        halign={Gtk.Align.END}
-        valign={Gtk.Align.CENTER}
-        onClicked={() => player.next()}
-        visible={bind(player, "canGoNext")}
-      >
-        <image iconName="media-skip-forward-symbolic" pixelSize={24} />
-      </button>
-    </box>
-  );
-}
 
 export default function DockApps() {
   const mpris = AstalMpris.get_default();
   return (
     <box cssClasses={["window-content", "dock-container"]} hexpand={false}>
       <AppsList />
-      {bind(mpris, "players").as((players) => (
-        <MediaPlayer player={players[0]} />
-      ))}
       <Gtk.Separator orientation={Gtk.Orientation.VERTICAL} />
       <AppButton
         app={{ iconName: "user-trash" } as AstalApps.Application}

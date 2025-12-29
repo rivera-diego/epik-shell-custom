@@ -16,22 +16,29 @@ import TrayPanelButton from "./TrayPanelButton";
 const { bar } = options;
 const { start, center, end } = bar;
 
+import DockTrigger from "../dock/DockTrigger";
+import MediaPanelButton from "./MediaPanelButton";
+import SysInfoPanelButton from "./SysInfoPanelButton";
+
 const panelButton = {
-  launcher: () => <LauncherPanelButton />,
-  workspace: () => <WorkspacesPanelButton />,
-  time: () => <TimePanelButton />,
-  notification: () => <NotifPanelButton />,
-  quicksetting: () => <QSPanelButton />,
-  tray: () => <TrayPanelButton />,
-  kanban: () => <KanbanPanelButton />,
+  launcher: (m: Gdk.Monitor) => <LauncherPanelButton />,
+  workspace: (m: Gdk.Monitor) => <WorkspacesPanelButton />,
+  time: (m: Gdk.Monitor) => <TimePanelButton />,
+  notification: (m: Gdk.Monitor) => <NotifPanelButton />,
+  quicksetting: (m: Gdk.Monitor) => <QSPanelButton />,
+  tray: (m: Gdk.Monitor) => <TrayPanelButton />,
+  kanban: (m: Gdk.Monitor) => <KanbanPanelButton />,
+  docktrigger: (m: Gdk.Monitor) => <DockTrigger monitor={m} />,
+  media: (m: Gdk.Monitor) => <MediaPanelButton />, // Nuevo widget media
+  sysinfo: (m: Gdk.Monitor) => <SysInfoPanelButton />, // Nuevo widget RAM
 };
 
-function Start() {
+function Start({ monitor }: { monitor: Gdk.Monitor }) {
   return (
-    <box halign={Gtk.Align.START}>
+    <box halign={Gtk.Align.START} cssClasses={["bar-start"]}>
       {start((s) => [
         ...separatorBetween(
-          s.map((s) => panelButton[s]()),
+          s.map((s) => panelButton[s](monitor)),
           Gtk.Orientation.VERTICAL,
         ),
       ])}
@@ -39,12 +46,12 @@ function Start() {
   );
 }
 
-function Center() {
+function Center({ monitor }: { monitor: Gdk.Monitor }) {
   return (
-    <box>
+    <box cssClasses={["bar-center"]}>
       {center((c) =>
         separatorBetween(
-          c.map((w) => panelButton[w]()),
+          c.map((w) => panelButton[w](monitor)),
           Gtk.Orientation.VERTICAL,
         ),
       )}
@@ -52,12 +59,12 @@ function Center() {
   );
 }
 
-function End() {
+function End({ monitor }: { monitor: Gdk.Monitor }) {
   return (
-    <box halign={Gtk.Align.END}>
+    <box halign={Gtk.Align.END} cssClasses={["bar-end"]}>
       {end((e) =>
         separatorBetween(
-          e.map((w) => panelButton[w]()),
+          e.map((w) => panelButton[w](monitor)),
           Gtk.Orientation.VERTICAL,
         ),
       )}
@@ -89,10 +96,10 @@ function Bar({ gdkmonitor, ...props }: BarProps) {
       application={App}
       {...props}
     >
-      <centerbox cssClasses={["bar-container"]}>
-        <Start />
-        <Center />
-        <End />
+      <centerbox cssClasses={["bar-container", !bar.separator.get() ? "split" : ""]}>
+        <Start monitor={gdkmonitor} />
+        <Center monitor={gdkmonitor} />
+        <End monitor={gdkmonitor} />
       </centerbox>
     </window>
   );
@@ -101,7 +108,8 @@ function Bar({ gdkmonitor, ...props }: BarProps) {
 export default function (gdkmonitor: Gdk.Monitor) {
   <Bar gdkmonitor={gdkmonitor} animation="slide top" />;
 
-  bar.position.subscribe(() => {
+  // Store subscription reference for cleanup
+  const positionSub = bar.position.subscribe(() => {
     App.toggle_window("bar");
     const barWindow = App.get_window("bar")!;
     barWindow.set_child(null);
@@ -111,4 +119,12 @@ export default function (gdkmonitor: Gdk.Monitor) {
       windowAnimation();
     });
   });
+
+  // Cleanup on window destroy
+  const window = App.get_window("bar");
+  if (window) {
+    window.connect("destroy", () => {
+      positionSub();
+    });
+  }
 }

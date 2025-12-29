@@ -151,14 +151,25 @@ function QSWindow(_gdkmonitor: Gdk.Monitor) {
 export default function (gdkmonitor: Gdk.Monitor) {
   QSWindow(gdkmonitor);
 
-  App.connect("window-toggled", (_, win) => {
+  // Store App.connect reference for cleanup
+  const windowToggledId = App.connect("window-toggled", (_, win) => {
     if (win.name == WINDOW_NAME && !win.visible) {
       qsPage.set("main");
     }
   });
 
-  layout.subscribe(() => {
+  // Store subscription reference for cleanup
+  const layoutSub = layout.subscribe(() => {
     App.remove_window(App.get_window(WINDOW_NAME)!);
     QSWindow(gdkmonitor);
   });
+
+  //Cleanup on window destroy
+  const window = App.get_window(WINDOW_NAME);
+  if (window) {
+    window.connect("destroy", () => {
+      GObject.signal_handler_disconnect(App, windowToggledId); // Cancel App.connect
+      layoutSub(); // Cancel layout.subscribe
+    });
+  }
 }

@@ -1,0 +1,93 @@
+@use "../variables.scss" as *;
+@use "sass:color";
+
+// Colores gráficas (estos faltaban en variables.scss)
+$green: #a6e3a1;
+$red: #f38ba8;
+$blue: #89b4fa;
+$yellow: #f9e2af;
+$magenta: #cba6f7;
+
+window#sysinfo-popup {
+    background-color: transparent;
+    border: 3px;
+}
+
+.sysinfo-popup-content {
+    background-color: $bg; // Usar variable global
+    color: $fg;
+    border-radius: 12px;
+    padding: 12px;
+    padding-bottom: 3px; // Reducir drásticamente el espacio inferior
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    // Usar la sombra EXACTA de common.scss (.window-content)
+    box-shadow:
+        0 0 0 $window-border-width $window-border-color,
+        $window-shadow-offset $window-shadow-blur $window-shadow-spread color.adjust($window-shadow-color, $alpha: calc($window-shadow-opacity - 1));
+
+    .stat-row {
+        margin-bottom: 5px;
+
+        // Quitar margen al ultimo elemento para reducir espacio abajo
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .stat-icon {
+        font-family: "Symbols Nerd Font";
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: $accent;
+    }
+
+    .stat-detail {
+        font-size: 0.8rem;
+        color: color.adjust($fg, $alpha: -0.4);
+
+    }
+
+    .sysinfo-separator {
+        background-color: rgba(255, 255, 255, 0.15); // Color visible para subdivision
+        min-height: 1px;
+        margin: 4px 0;
+    }
+
+    .stat-bar {
+        min-height: 6px;
+        border-radius: 3px;
+        margin-bottom: 0; // Asegurar que no haya margen extra
+
+        // GTK LevelBar usa nodos internos 'block'
+        // Necesitamos acceder a ellos. En CSS GTK a veces es trough > block.
+        // Astal levelbar suele mapear directo.
+
+        block {
+            min-height: 6px;
+            border-radius: 3px;
+            box-shadow: none;
+            border: none;
+        }
+
+        &.cpu block.low {
+            background-color: $green;
+        }
+
+        &.cpu block.high {
+            background-color: $red;
+        }
+
+        &.ram block.low {
+            background-color: $blue;
+        }
+
+        &.ram block.high {
+            background-color: $yellow;
+        }
+
+        &.gpu block.low {
+            background-color: $magenta;
+        }
+    }
+}
