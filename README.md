@@ -32,7 +32,11 @@ This fork includes the following customizations:
 ## Screenshots
 
 https://github.com/user-attachments/assets/adc20cd0-59fa-43a8-bd67-8530d01670fd
-*Custom Epik Shell with enhanced widgets and themes*
+
+*Custom Epik Shell with enhanced widgets, themes, and multi-monitor support*
+
+---
+
 ## Original Credits
 
 - **Original Epik Shell**: [ezerinz/epik-shell](https://github.com/ezerinz/epik-shell)
